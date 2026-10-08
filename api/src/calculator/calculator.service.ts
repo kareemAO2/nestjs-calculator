@@ -17,6 +17,10 @@ export class CalculatorService {
     }
     const operator = operatonsMap[calculatorForm.operator];
     const arthmeticFunc = operationFunctions[operator];
-    return { result: arthmeticFunc(calculatorForm.num1, calculatorForm.num2) };
+    return {
+      result: parseFloat(
+        arthmeticFunc(calculatorForm.num1, calculatorForm.num2).toFixed(8),
+      ),
+    };
   }
 }

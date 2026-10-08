@@ -8,7 +8,7 @@ export class PipeParse<T> implements PipeTransform<unknown, T> {
     if (!result.success) {
       const formattedErrors = result.error.flatten().fieldErrors;
       throw new BadRequestException({
-        message: 'Invalid data',
+        message: 'Syntax error',
         errors: formattedErrors,
       });
     }
