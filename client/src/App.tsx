@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ErrorModal } from "./components/ErrorModal";
 import "./App.css";
 
 const BASE_URL = "http://localhost:3000";
@@ -72,12 +71,16 @@ function App() {
       handleDelete();
     } else if (key === "ANS") {
       if (!isOperator(arthmeticExpression[arthmeticExpression.length - 1]))
-        return;
-      setArthmeticExpression(arthmeticExpression + result.toString().trim());
+        setArthmeticExpression(result);
+      else
+        setArthmeticExpression(arthmeticExpression + result.toString().trim());
     } else if (key === "AC") {
       handleAC();
     } else if (isOperator(key)) {
-      if (display.length === 0 || isOperator(display[display.length - 1]))
+      if (
+        arthmeticExpression.length === 0 ||
+        isOperator(arthmeticExpression[arthmeticExpression.length - 1])
+      )
         return;
       setArthmeticExpression(arthmeticExpression + key);
     } else {
@@ -95,8 +98,8 @@ function App() {
     try {
       setStatus("pending");
       const response = await axios.post(`${BASE_URL}/calculator/calculate`, {
-        num1: Number(inputX),
-        num2: Number(inputY),
+        num1: inputX === "" ? null : Number(inputX),
+        num2: inputY === "" ? null : Number(inputY),
         operator: operator,
       });
       setStatus("fulfilled");
@@ -106,7 +109,7 @@ function App() {
     } catch (err: any) {
       setStatus("rejected");
       setErrorMessage(
-        err.response.data?.errors ? "Missing data" : err.response.data.message,
+        !err.response.data?.errors ? "Missing data" : err.response.data.message,
       );
       setResult("");
 
@@ -114,11 +117,11 @@ function App() {
     }
   }
 
-  let message = "";
-  if (status === "fulfilled") message = result;
-  else if (status === "idle") message = arthmeticExpression;
-  else if (status === "rejected") message = errorMessage;
-  else message = "Calculating...";
+  // let message = "";
+  // if (status === "fulfilled") message = result;
+  // else if (status === "idle") message = arthmeticExpression;
+  // else if (status === "rejected") message = errorMessage;
+  // else message = "Calculating...";
   return (
     <div className="bg-gray-100 flex justify-center items-center w-full h-full">
       <div className="min-w-[320px] w-1/4 bg-gray-300 p-4 rounded-2xl">

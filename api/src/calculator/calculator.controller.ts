@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { CalculatorService } from './calculator.service.js';
 import {
   zodCalculatorSchema,
@@ -10,13 +10,10 @@ export class CalculatorController {
   constructor(private readonly calculatorService: CalculatorService) {}
 
   @Post('calculate')
+  @HttpCode(201)
   async calculate(
     @Body(new PipeParse(zodCalculatorSchema)) calculatorForm: CalculatorFormDto,
   ) {
-    try {
-      return this.calculatorService.calculate(calculatorForm);
-    } catch (err) {
-      throw err;
-    }
+    return this.calculatorService.calculate(calculatorForm);
   }
 }
